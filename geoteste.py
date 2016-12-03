@@ -2,7 +2,6 @@ import os
 import sys
 import math
 import json 
-import doctest
 from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
@@ -10,12 +9,7 @@ from geopy import geocoders
 import redis
 
 
-#Change them with your authotenfication tokens
-ckey = 'B4qL5xWeoAtT4HDeM8fPRTUau'
-csecret ='XpctNz94QrAmv7ybKHNS70TK9DhD8LBadFNo4Rv3rxQlR1e7bd'
-atoken = '138579781-WdFq2TX2MSIW1Gh8JsQzY4iWqaO032TLVqUVjhSc'
-asecret = 'yHE559wpPnHJmFzeFY9JOHSUO5zSQhxGhJnZcGNEOWArR'
-#################################
+
 
 
 class RedisInterface():
@@ -27,6 +21,7 @@ class RedisInterface():
 
     def grafaDados(self, data):
         self.conn.set(data['text'], data['coordinates'])
+
 
 class listener(StreamListener):
     def on_data(self, data):
@@ -62,13 +57,8 @@ class TrataGeo():
     
     # degrees to radians
     def deg2rad(self, degrees):
-        '''
-        >>> t = TrataGeo()
-        >>> rad = t.deg2rad(10)
-        >>> grad = t.rad2deg(rad)
-        10
-        '''
         return math.pi*degrees/180.0
+    
     # radians to degrees
     def rad2deg(self, radians):
         return 180.0*radians/math.pi
@@ -102,19 +92,21 @@ class TrataGeo():
     
         return (self.rad2deg(latMin), self.rad2deg(lonMin), self.rad2deg(latMax), self.rad2deg(lonMax))
 
-def main():
+
+
+import unittest
+
+class TestTrataGeo(unittest.TestCase):
     
-    adress=str(sys.argv[1]) #Location (City name, adress...)
-    halfradius=float(sys.argv[2]) #Radius in Km of the Bounding Box
-    g = geocoders.GoogleV3()
-    place, (lat, lng) = g.geocode(adress)
-    geo = TrataGeo()
-    location = [geo.bounding_box(lng,lat,halfradius)[0],geo.bounding_box(lng,lat,halfradius)[1],geo.bounding_box(lng,lat,halfradius)[2],geo.bounding_box(lng,lat,halfradius)[3]]
-    # print "Location of "+ adress+" :",lng,lat
-    auth = OAuthHandler(ckey, csecret)
-    auth.set_access_token(atoken, asecret)
-    twitterStream = Stream(auth, listener())
-    twitterStream.filter(locations=location)
-    
-   
-main()
+    def test_deg2rad(self):
+        t = TrataGeo()
+        self.assertEqual(round(t.deg2rad(10), 2), 0.17)
+        
+
+    def test_rad2deg(self):
+        t = TrataGeo()
+        self.assertEqual(round(t.rad2deg(0.17), 2), 9.74)
+
+
+if __name__ == "__main__":
+    unittest.main()
