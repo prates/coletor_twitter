@@ -24,22 +24,28 @@ class RedisInterface():
 
 
 class listener(StreamListener):
+    
+    __lang = None
+    
+    def __init__(self, lang):
+        self.__lang = lang
+    
     def on_data(self, data):
         data = json.loads(data)
         if data['coordinates']!=None:
-            chaves = ['text', 'coordinates']
-            data_formatada = {}
-            for i in chaves:
-                if data.__contains__(i):	
-                    if i == 'coordinates':
-                        data_formatada[i] = json.dumps(data[i]['coordinates'])
-                    else:
-                        data_formatada[i] = data[i]
-            print data_formatada
-            red = RedisInterface()
-            red.connect(host='localhost', port=6379, db=0)
-            red.grafaDados(data_formatada)
-            #print >>logfile, stream_log
+            if ( self.__lang == data['lang'] or self.__lang == None ):
+                chaves = ['text', 'coordinates']
+                data_formatada = {}
+                for i in chaves:
+                    if data.__contains__(i):	
+                        if i == 'coordinates':
+                            data_formatada[i] = json.dumps(data[i]['coordinates'])
+                        else:
+                            data_formatada[i] = data[i]
+                print data_formatada
+                red = RedisInterface()
+                red.connect(host='localhost', port=6379, db=0)
+                red.grafaDados(data_formatada)
             
         else:
             print "Sem geo"
