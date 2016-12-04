@@ -1,10 +1,13 @@
 # coletor_twitter
 #### Desenvovido por Alexandre Prates ####
 
+###Arquitetura###
 
-##Descrição##
+![](https://cloud.githubusercontent.com/assets/482626/20864072/a890d086-b9c8-11e6-88bf-2725afb2f58b.png)
 
-Essa aplicação utiliza a streamapi do twitter para coletar tweet com informações de geolocalização. Essa aplicação utiliza o REdis para persistir a informação, abaixo observamos 
+###Descrição###
+
+Essa aplicação utiliza a streamapi do twitter para coletar tweet com informações de geolocalização. Essa aplicação utiliza o Redis para persistir a informação, abaixo observamos 
 como instalar o redis.
 
 Exemplo de inicialização do Redis n máquina local:
@@ -21,7 +24,7 @@ $ docker run --name redis -d -p 6379:6379 redis
 
 A implementação e testes foram feito utilizando Ubuntu linux.
 
-##Procedimento de instalação:##
+###Procedimento de instalação:###
 
 - Crie um diretório;
 - Utilize o virtualenv para criar um container python2.7
