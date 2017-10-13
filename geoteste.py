@@ -1,5 +1,6 @@
 import os
 import sys
+from datetime import datetime
 import math
 import json 
 from tweepy import Stream
@@ -31,24 +32,9 @@ class listener(StreamListener):
         self.__lang = lang
     
     def on_data(self, data):
-        data = json.loads(data)
-        if data['coordinates']!=None:
-            if ( self.__lang == data['lang'] or self.__lang == None ):
-                chaves = ['text', 'coordinates']
-                data_formatada = {}
-                for i in chaves:
-                    if data.__contains__(i):	
-                        if i == 'coordinates':
-                            data_formatada[i] = json.dumps(data[i]['coordinates'])
-                        else:
-                            data_formatada[i] = data[i]
-                print data_formatada
-                red = RedisInterface()
-                red.connect(host='localhost', port=6379, db=0)
-                red.grafaDados(data_formatada)
-            
-        else:
-            print "Sem geo"
+        #data = json.loads(data)
+        with open('twitter_%s' % ( datetime.now().strftime('%Y%m%d%H')), 'a') as f:
+            f.write(data)
         return True
 
     def on_error(self, statut):

@@ -55,10 +55,16 @@ if __name__ == "__main__":
             geo = TrataGeo()
             location = [geo.bounding_box(lng,lat,halfradius)[0],geo.bounding_box(lng,lat,halfradius)[1],geo.bounding_box(lng,lat,halfradius)[2],geo.bounding_box(lng,lat,halfradius)[3]]
             # print "Location of "+ adress+" :",lng,lat
+            #location = ','.join([ str(i) for i in  location])
+            print location
             auth = OAuthHandler(ckey, csecret)
             auth.set_access_token(atoken, asecret)
-            twitterStream = Stream(auth, listener(lang=lang))
-            twitterStream.filter(locations=location)
+            while True: 
+                try:
+                    twitterStream = Stream(auth, listener(lang=lang))
+                    twitterStream.filter(locations=location)
+                except Exception as e:
+                    print e
         else:
             print "use a opção -h ou --help para opter ajuda."
         
